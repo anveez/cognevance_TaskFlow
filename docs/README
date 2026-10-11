@@ -1,0 +1,358 @@
+# Cognevance TaskFlow — MERN Task Manager
+
+## 1. Project Overview
+
+TaskFlow is a full-stack task management web application developed using the MERN stack (MongoDB, Express.js, React.js, and Node.js). It helps users organize their daily tasks, set deadlines, assign priorities, and track task completion through a user-friendly dashboard.
+
+The application provides secure user authentication using JSON Web Tokens (JWT) and bcrypt password hashing. Task information is stored in MongoDB and retrieved through REST APIs.
+
+## 2. Project Objectives
+
+- Implement secure user registration and login using JWT and bcrypt.
+- Develop REST APIs using Node.js and Express.js.
+- Implement Create, Read, Update, and Delete (CRUD) operations for tasks.
+- Store user and task information in MongoDB.
+- Build an interactive React.js dashboard.
+- Support task priorities, status updates, and deadlines.
+- Test APIs and deploy the application online.
+
+## 3. Technologies Used
+
+- **Frontend:** React.js, Vite, HTML, CSS, JavaScript
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB Atlas
+- **ODM:** Mongoose
+- **Authentication:** JSON Web Token (JWT)
+- **Password Security:** bcrypt
+- **HTTP Requests:** Axios
+- **Routing:** React Router
+- **Security Middleware:** Helmet and CORS, where configured
+- **Version Control:** Git and GitHub
+
+## 4. Features
+
+- User registration and login.
+- Secure password hashing.
+- JWT-based authentication.
+- Create new tasks.
+- View saved tasks.
+- Edit existing tasks.
+- Delete tasks.
+- Set task descriptions and deadlines.
+- Assign task priorities such as High, Medium, and Low.
+- Update task status.
+- Dashboard with a dark, burgundy-themed interface.
+- Persistent task storage using MongoDB.
+
+Search, filtering, and other optional features should be listed as completed only after they have been implemented and tested.
+
+## 5. Project Structure
+
+```text
+task-manager/
+├── client/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── api.js
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── package.json
+│   └── .env
+├── server/
+│   ├── src/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── package.json
+│   └── .env
+├── docs/
+└── README.md
+```
+
+The exact files may vary according to the current implementation.
+
+## 6. Application Workflow
+
+1. A user registers through the frontend.
+2. The backend validates the registration details and hashes the password using bcrypt.
+3. The user logs in with their registered credentials.
+4. The backend verifies the credentials and generates a JWT.
+5. The frontend uses the token when accessing protected APIs.
+6. The backend authentication middleware verifies the token.
+7. Task operations are processed by Express.js controllers.
+8. Mongoose stores and retrieves the data from MongoDB.
+9. The React dashboard displays the user's tasks and reflects changes.
+
+## 7. Database Schema
+
+### User Collection
+
+| Field | Description |
+|---|---|
+| _id | Unique MongoDB document ID |
+| name | User's name, if included in the model |
+| email | User's email address |
+| password | Hashed password |
+| createdAt | Creation timestamp, if enabled |
+| updatedAt | Last update timestamp, if enabled |
+
+### Task Collection
+
+| Field | Description |
+|---|---|
+| _id | Unique task ID |
+| user / userId | Reference to the task owner |
+| title | Task title |
+| description | Task details |
+| date / dueDate | Task deadline |
+| priority | Task priority |
+| status | Current task status |
+| createdAt | Creation timestamp, if enabled |
+| updatedAt | Last update timestamp, if enabled |
+
+The actual field names and data types should match the Mongoose models in the source code. Each task should be associated with its owner, and the backend should enforce user-specific access.
+
+## 8. REST API Documentation
+
+**Local API Base URL:** `http://localhost:5000/api`
+
+The following endpoints describe the intended API structure. Verify the exact paths and request formats against the implemented backend routes before submission.
+
+### Authentication APIs
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/auth/register` | Register a new user |
+| POST | `/auth/login` | Authenticate a user and return a token |
+
+### Task APIs
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/tasks` | Retrieve the authenticated user's tasks |
+| POST | `/tasks` | Create a task |
+| PATCH | `/tasks/:id` | Update a task or its status |
+| DELETE | `/tasks/:id` | Delete a task |
+
+Protected endpoints use a JWT in the Authorization header:
+
+```http
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+### Example Task Request
+
+```json
+{
+  "title": "Complete project documentation",
+  "description": "Prepare the TaskFlow README and API documentation.",
+  "priority": "Medium",
+  "status": "Pending",
+  "dueDate": "2026-10-20"
+}
+```
+
+The accepted field names and status values depend on the implemented Task model.
+
+## 9. Prerequisites
+
+Install the following software before running the project:
+
+- Node.js
+- npm
+- MongoDB Atlas account or a reachable MongoDB server
+- Git
+- Visual Studio Code (recommended)
+
+## 10. Installation and Setup
+
+### Step 1: Clone the Repository
+
+After uploading the project to GitHub, run:
+
+```bash
+git clone https://github.com/anveez/cognevance_TaskFlow.git
+cd cognevance_TaskFlow
+```
+
+
+
+### Step 2: Install Backend Dependencies
+
+```bash
+cd server
+npm install
+```
+
+### Step 3: Configure Backend Environment Variables
+
+Create a `server/.env` file containing the environment variables required by the backend.
+
+Example:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_long_random_secret
+```
+
+Use the exact variable names expected by your source code. Do not commit this file to GitHub.
+
+### Step 4: Start the Backend
+
+From the `server` directory, run:
+
+```bash
+npm run dev
+```
+
+The backend should connect to MongoDB and start on port 5000, unless configured otherwise.
+
+### Step 5: Install Frontend Dependencies
+
+Open a second terminal and run:
+
+```bash
+cd client
+npm install
+```
+
+### Step 6: Configure the Frontend
+
+Create `client/.env` if required:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+Ensure that the variable matches the API configuration in `client/src/api.js`. Restart Vite after changing environment variables.
+
+### Step 7: Start the Frontend
+
+From the `client` directory, run:
+
+```bash
+npm run dev
+```
+
+Open the local URL shown in the terminal, usually:
+
+`http://localhost:5173`
+
+## 11. Testing
+
+The following tests should be completed before submission:
+
+- User registration with valid details.
+- Login with correct and incorrect credentials.
+- Access to protected APIs with and without a valid JWT.
+- Task creation and retrieval.
+- Task editing and status updates.
+- Task deletion.
+- Persistence of tasks after refreshing the browser.
+- Correct handling of task ownership.
+- Validation of invalid input.
+- Correct handling of deadlines and priorities.
+- Testing of search and filtering, if implemented.
+- Testing of the deployed application and live APIs.
+
+## 12. Screenshots and Demo
+
+Store screenshots in `docs/screenshots/`.
+
+Recommended screenshots:
+
+- Login page
+- Registration page
+- TaskFlow dashboard
+- Create task form
+- Edit task form
+- Task priority and status
+- Completed tasks
+
+Example folder structure:
+
+```text
+docs/
+├── screenshots/
+│   ├── login.png
+│   ├── register.png
+│   ├── dashboard.png
+│   ├── create-task.png
+│   └── completed-task.png
+├── API_DOCUMENTATION.md
+└── project-report.pdf
+```
+
+After adding a screenshot, it can be displayed in this README with:
+
+```markdown
+![TaskFlow Dashboard](docs/screenshots/dashboard.png)
+```
+
+**Demo video:** Add the demo link after recording and uploading the video.
+
+## 13. Deployment
+
+Deployment links will be added after the frontend and backend have been deployed and tested.
+
+- **Frontend URL:** ADD_FRONTEND_DEPLOYMENT_URL
+- **Backend API URL:** ADD_BACKEND_DEPLOYMENT_URL
+- **GitHub Repository:** ADD_GITHUB_REPOSITORY_URL
+
+Possible hosting platforms include Vercel or Netlify for the React frontend and Render or another Node.js-compatible hosting platform for the Express backend.
+
+The production environment must use the correct frontend API URL, MongoDB connection string, JWT secret, and allowed CORS origin.
+
+## 14. Security Considerations
+
+- Passwords must be hashed before being stored.
+- JWT secrets and MongoDB credentials must remain private.
+- Environment files must not be committed to GitHub.
+- Task endpoints must enforce ownership on the backend.
+- Protected routes must reject invalid or missing tokens.
+- Production CORS settings should allow only the intended frontend origins.
+- Screenshots and documentation must not expose private credentials or tokens.
+
+## 15. Future Enhancements
+
+Possible future improvements include:
+
+- Advanced task search and filtering.
+- Overdue task indicators and deadline reminders.
+- Improved mobile responsiveness.
+- Pagination for large task lists.
+- Automated frontend and backend tests.
+- Password reset and email verification.
+- Notifications and recurring tasks.
+- Additional dashboard analytics.
+
+## 16. Project Deliverables
+
+- Complete MERN source code.
+- REST API documentation.
+- MongoDB database schema.
+- Application screenshots or demo.
+- Deployment links.
+- GitHub repository link.
+- Project report.
+
+## 17. Author and Project Links
+
+**Project Name:** Cognevance TaskFlow — MERN Task Manager
+
+**GitHub Profile:** https://github.com/anveez
+
+**Repository:** ADD_YOUR_REPOSITORY_URL
+
+**Live Application:** ADD_YOUR_LIVE_FRONTEND_URL
+
+**Backend API:** ADD_YOUR_BACKEND_API_URL
+
+---
+
+Prepared for the Cognevance project submission. Update all placeholders and verify API routes, database fields, and implemented features before submitting.
