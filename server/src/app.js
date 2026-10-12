@@ -23,6 +23,8 @@ app.get('/api/health', (req, res) => {
     message: 'Task Manager API is running!'
   });
 });
+app.get('/', (_req, res) => res.json({ message: 'Task Manager API is running' }));
+app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
 // Registration and login
 app.use('/api/auth', authRoutes);

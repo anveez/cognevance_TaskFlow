@@ -298,13 +298,13 @@ After adding a screenshot, it can be displayed in this README with:
 
 ## 13. Deployment
 
-Deployment links will be added after the frontend and backend have been deployed and tested.
 
-- **Frontend URL:** ADD_FRONTEND_DEPLOYMENT_URL
+
+- **Frontend URL:** https://anveez-taskflow-deploy-2026.vercel.app/login
 - **Backend API URL:** ADD_BACKEND_DEPLOYMENT_URL
-- **GitHub Repository:** ADD_GITHUB_REPOSITORY_URL
+- **GitHub Repository:** https://github.com/anveez/cognevance_TaskFlow
 
-Possible hosting platforms include Vercel or Netlify for the React frontend and Render or another Node.js-compatible hosting platform for the Express backend.
+
 
 The production environment must use the correct frontend API URL, MongoDB connection string, JWT secret, and allowed CORS origin.
 
@@ -347,7 +347,7 @@ Possible future improvements include:
 
 **GitHub Profile:** https://github.com/anveez
 
-**Repository:** ADD_YOUR_REPOSITORY_URL
+**Repository:** https://github.com/anveez/cognevance_TaskFlow
 
 **Live Application:** ADD_YOUR_LIVE_FRONTEND_URL
 
