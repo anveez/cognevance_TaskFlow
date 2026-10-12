@@ -2,64 +2,63 @@
 
 ## 1. Project Overview
 
-TaskFlow is a full-stack task management web application developed using the MERN stack (MongoDB, Express.js, React.js, and Node.js). It helps users organize their daily tasks, set deadlines, assign priorities, and track task completion through a user-friendly dashboard.
+TaskFlow is a full-stack task management web application built with the MERN stack (MongoDB, Express.js, React.js, Node.js). It helps users organise their tasks, set deadlines, assign priorities and track completion through a dark, burgundy-themed dashboard.
 
-The application provides secure user authentication using JSON Web Tokens (JWT) and bcrypt password hashing. Task information is stored in MongoDB and retrieved through REST APIs.
+Users sign up and log in securely with JSON Web Tokens (JWT) and bcrypt password hashing. Task data is stored in MongoDB and served through REST APIs.
 
 ## 2. Project Objectives
 
-- Implement secure user registration and login using JWT and bcrypt.
+- Implement secure registration and login using JWT and bcrypt.
 - Develop REST APIs using Node.js and Express.js.
-- Implement Create, Read, Update, and Delete (CRUD) operations for tasks.
+- Implement Create, Read, Update and Delete (CRUD) operations for tasks.
 - Store user and task information in MongoDB.
 - Build an interactive React.js dashboard.
-- Support task priorities, status updates, and deadlines.
-- Test APIs and deploy the application online.
+- Support task filtering, status updates and deadlines.
+- Test the APIs and deploy the application online.
 
 ## 3. Technologies Used
 
-- **Frontend:** React.js, Vite, HTML, CSS, JavaScript
+- **Frontend:** React.js, Vite, React Router, HTML, CSS, JavaScript
 - **Backend:** Node.js, Express.js
-- **Database:** MongoDB Atlas
-- **ODM:** Mongoose
+- **Database:** MongoDB Atlas with Mongoose
 - **Authentication:** JSON Web Token (JWT)
-- **Password Security:** bcrypt
-- **HTTP Requests:** Axios
-- **Routing:** React Router
-- **Security Middleware:** Helmet and CORS, where configured
-- **Version Control:** Git and GitHub
+- **Password security:** bcrypt
+- **HTTP requests:** Fetch API
+- **Security middleware:** Helmet and CORS
+- **Hosting:** Vercel (frontend and backend)
+- **Version control:** Git and GitHub
 
 ## 4. Features
 
-- User registration and login.
-- Secure password hashing.
-- JWT-based authentication.
-- Create new tasks.
-- View saved tasks.
-- Edit existing tasks.
-- Delete tasks.
-- Set task descriptions and deadlines.
-- Assign task priorities such as High, Medium, and Low.
-- Update task status.
-- Dashboard with a dark, burgundy-themed interface.
-- Persistent task storage using MongoDB.
-
-Search, filtering, and other optional features should be listed as completed only after they have been implemented and tested.
+- User registration and login with hashed passwords.
+- JWT-based authentication on all task routes.
+- Create, view, edit and delete tasks.
+- Task descriptions, deadlines and priorities (High, Medium, Low).
+- Status updates: To do, In progress, Done. Click a task's circle to move it forward.
+- Filter tasks by status or overdue, filter by priority, and search by text.
+- Calendar with deadline markers. Click a day to filter tasks due on it.
+- Overdue highlighting with plain labels such as "Due tomorrow" and "Overdue by 2 days".
+- Dashboard with stat cards, a 7-day deadline chart and a progress donut.
+- Responsive layout for desktop, tablet and mobile.
+- Each user can see and change only their own tasks.
 
 ## 5. Project Structure
 
 ```text
-task-manager/
+cognevance_TaskFlow/
 ├── client/
 │   ├── src/
-│   │   ├── pages/
+│   │   ├── pages/            Login.jsx, Register.jsx, Dashboard.jsx
 │   │   ├── api.js
+│   │   ├── AuthContext.jsx
 │   │   ├── App.jsx
 │   │   ├── main.jsx
-│   │   └── index.css
+│   │   ├── index.css
+│   │   └── dashboard.css
 │   ├── package.json
 │   └── .env
 ├── server/
+│   ├── api/index.js          Vercel entry point
 │   ├── src/
 │   │   ├── models/
 │   │   ├── routes/
@@ -67,75 +66,74 @@ task-manager/
 │   │   ├── middleware/
 │   │   ├── app.js
 │   │   └── server.js
+│   ├── vercel.json
 │   ├── package.json
 │   └── .env
 ├── docs/
+│   ├── API.md
+│   ├── SCHEMA.md
+│   └── screenshots/
 └── README.md
 ```
-
-The exact files may vary according to the current implementation.
 
 ## 6. Application Workflow
 
 1. A user registers through the frontend.
-2. The backend validates the registration details and hashes the password using bcrypt.
-3. The user logs in with their registered credentials.
-4. The backend verifies the credentials and generates a JWT.
-5. The frontend uses the token when accessing protected APIs.
-6. The backend authentication middleware verifies the token.
-7. Task operations are processed by Express.js controllers.
-8. Mongoose stores and retrieves the data from MongoDB.
-9. The React dashboard displays the user's tasks and reflects changes.
+2. The backend validates the details and hashes the password with bcrypt.
+3. The user logs in, and the backend verifies the credentials and returns a JWT.
+4. The frontend sends the token in the Authorization header on every task request.
+5. The authentication middleware verifies the token and identifies the user.
+6. Express controllers process the task operation.
+7. Mongoose stores and retrieves the data from MongoDB.
+8. The React dashboard shows the user's tasks and reflects every change.
 
 ## 7. Database Schema
 
-### User Collection
+Full details are in [docs/SCHEMA.md](docs/SCHEMA.md).
+
+### User collection
 
 | Field | Description |
 |---|---|
 | _id | Unique MongoDB document ID |
-| name | User's name, if included in the model |
-| email | User's email address |
-| password | Hashed password |
-| createdAt | Creation timestamp, if enabled |
-| updatedAt | Last update timestamp, if enabled |
+| name | User's name |
+| email | Unique email address, stored lowercase |
+| password | bcrypt-hashed password (never returned by the API) |
+| createdAt, updatedAt | Timestamps |
 
-### Task Collection
+### Task collection
 
 | Field | Description |
 |---|---|
 | _id | Unique task ID |
-| user / userId | Reference to the task owner |
-| title | Task title |
+| user | Reference to the owner (users._id) |
+| title | Task title (required, max 120 characters) |
 | description | Task details |
-| date / dueDate | Task deadline |
-| priority | Task priority |
-| status | Current task status |
-| createdAt | Creation timestamp, if enabled |
-| updatedAt | Last update timestamp, if enabled |
-
-The actual field names and data types should match the Mongoose models in the source code. Each task should be associated with its owner, and the backend should enforce user-specific access.
+| status | `todo`, `in-progress` or `done` (default `todo`) |
+| priority | `low`, `medium` or `high` (default `medium`) |
+| dueDate | Deadline (optional) |
+| createdAt, updatedAt | Timestamps |
 
 ## 8. REST API Documentation
 
-**Local API Base URL:** `http://localhost:5000/api`
+Full details and examples are in [docs/API.md](docs/API.md).
 
-The following endpoints describe the intended API structure. Verify the exact paths and request formats against the implemented backend routes before submission.
+**Local base URL:** `http://localhost:5000/api`
 
 ### Authentication APIs
 
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | `/auth/register` | Register a new user |
-| POST | `/auth/login` | Authenticate a user and return a token |
+| POST | `/auth/login` | Log in and receive a token |
 
-### Task APIs
+### Task APIs (token required)
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/tasks` | Retrieve the authenticated user's tasks |
+| GET | `/tasks` | List the user's tasks. Optional query: `status`, `priority`, `search`, `overdue`, `sortBy`, `order` |
 | POST | `/tasks` | Create a task |
-| PATCH | `/tasks/:id` | Update a task or its status |
+| PUT | `/tasks/:id` | Update a task or its status |
 | DELETE | `/tasks/:id` | Delete a task |
 
 Protected endpoints use a JWT in the Authorization header:
@@ -144,215 +142,180 @@ Protected endpoints use a JWT in the Authorization header:
 Authorization: Bearer YOUR_JWT_TOKEN
 ```
 
-### Example Task Request
+### Example task request
 
 ```json
 {
   "title": "Complete project documentation",
   "description": "Prepare the TaskFlow README and API documentation.",
-  "priority": "Medium",
-  "status": "Pending",
+  "priority": "medium",
+  "status": "todo",
   "dueDate": "2026-10-20"
 }
 ```
 
-The accepted field names and status values depend on the implemented Task model.
-
 ## 9. Prerequisites
 
-Install the following software before running the project:
-
-- Node.js
-- npm
-- MongoDB Atlas account or a reachable MongoDB server
+- Node.js 18 or newer, and npm
+- A MongoDB Atlas account (or a reachable MongoDB server)
 - Git
 - Visual Studio Code (recommended)
 
 ## 10. Installation and Setup
 
-### Step 1: Clone the Repository
-
-After uploading the project to GitHub, run:
+### Step 1: Clone the repository
 
 ```bash
 git clone https://github.com/anveez/cognevance_TaskFlow.git
 cd cognevance_TaskFlow
 ```
 
-
-
-### Step 2: Install Backend Dependencies
+### Step 2: Install backend dependencies
 
 ```bash
 cd server
 npm install
 ```
 
-### Step 3: Configure Backend Environment Variables
+### Step 3: Configure backend environment variables
 
-Create a `server/.env` file containing the environment variables required by the backend.
-
-Example:
+Create `server/.env`:
 
 ```env
 PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_long_random_secret
+CLIENT_URL=http://localhost:5173
 ```
 
-Use the exact variable names expected by your source code. Do not commit this file to GitHub.
+Do not commit this file to GitHub.
 
-### Step 4: Start the Backend
-
-From the `server` directory, run:
+### Step 4: Start the backend
 
 ```bash
 npm run dev
 ```
 
-The backend should connect to MongoDB and start on port 5000, unless configured otherwise.
+The backend connects to MongoDB and starts on port 5000.
 
-### Step 5: Install Frontend Dependencies
+### Step 5: Install frontend dependencies
 
-Open a second terminal and run:
+Open a second terminal:
 
 ```bash
 cd client
 npm install
 ```
 
-### Step 6: Configure the Frontend
+### Step 6: Configure the frontend (optional locally)
 
-Create `client/.env` if required:
+Create `client/.env` only if you want to point at a different backend:
 
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-Ensure that the variable matches the API configuration in `client/src/api.js`. Restart Vite after changing environment variables.
+Restart Vite after changing environment variables.
 
-### Step 7: Start the Frontend
-
-From the `client` directory, run:
+### Step 7: Start the frontend
 
 ```bash
 npm run dev
 ```
 
-Open the local URL shown in the terminal, usually:
-
-`http://localhost:5173`
+Open http://localhost:5173.
 
 ## 11. Testing
 
-The following tests should be completed before submission:
+Tick each item after testing it.
 
-- User registration with valid details.
-- Login with correct and incorrect credentials.
-- Access to protected APIs with and without a valid JWT.
-- Task creation and retrieval.
-- Task editing and status updates.
-- Task deletion.
-- Persistence of tasks after refreshing the browser.
-- Correct handling of task ownership.
-- Validation of invalid input.
-- Correct handling of deadlines and priorities.
-- Testing of search and filtering, if implemented.
-- Testing of the deployed application and live APIs.
+- [ ] Register with valid details
+- [ ] Register with a duplicate email (should fail)
+- [ ] Log in with correct and incorrect credentials
+- [ ] Call task APIs with and without a valid token
+- [ ] Create and list tasks
+- [ ] Edit a task and change its status
+- [ ] Delete a task
+- [ ] Tasks are still there after refreshing the browser
+- [ ] A second user cannot see the first user's tasks
+- [ ] Invalid input is rejected (empty title, bad status)
+- [ ] Deadlines, overdue highlighting and priorities display correctly
+- [ ] Search, status tabs, priority filter and calendar filter work
+- [ ] The deployed frontend and live API work end to end
 
-## 12. Screenshots and Demo
+## 12. Screenshots 
 
-Store screenshots in `docs/screenshots/`.
+Screenshots are stored in `docs/screenshots/`.
 
-Recommended screenshots:
-
-- Login page
-- Registration page
-- TaskFlow dashboard
-- Create task form
-- Edit task form
-- Task priority and status
-- Completed tasks
-
-Example folder structure:
-
-```text
-docs/
-├── screenshots/
-│   ├── login.png
-│   ├── register.png
-│   ├── dashboard.png
-│   ├── create-task.png
-│   └── completed-task.png
-├── API_DOCUMENTATION.md
-└── project-report.pdf
-```
-
-After adding a screenshot, it can be displayed in this README with:
+| Screen | File |
+|---|---|
+| Login | `docs/screenshots/login.png` |
+| Registration | `docs/screenshots/register.png` |
+| Dashboard | `docs/screenshots/dashboard.png` |
+| Create task form | `docs/screenshots/create-task.png` |
+| Overdue filter | `docs/screenshots/overdue.png` |
+| API tests (Postman) | `docs/screenshots/postman.png` |
 
 ```markdown
 ![TaskFlow Dashboard](docs/screenshots/dashboard.png)
 ```
 
-**Demo video:** Add the demo link after recording and uploading the video.
+
 
 ## 13. Deployment
 
+- **Frontend URL:** https://anveez-taskflow-deploy-2026.vercel.app
+- **Backend API URL:** https://cognevance-task-flow.vercel.app/api
+- **API health check:** https://cognevance-task-flow.vercel.app/api/health
+- **GitHub repository:** https://github.com/anveez/cognevance_TaskFlow
 
+Production configuration:
 
-- **Frontend URL:** https://anveez-taskflow-deploy-2026.vercel.app/login
-- **Backend API URL:** ADD_BACKEND_DEPLOYMENT_URL
-- **GitHub Repository:** https://github.com/anveez/cognevance_TaskFlow
-
-
-
-The production environment must use the correct frontend API URL, MongoDB connection string, JWT secret, and allowed CORS origin.
+- Backend variables: `MONGODB_URI`, `JWT_SECRET`, `CLIENT_URL` (the frontend address, no trailing slash).
+- Frontend variable: `VITE_API_URL` (the backend address ending in `/api`).
+- MongoDB Atlas Network Access allows connections from the hosting platform.
 
 ## 14. Security Considerations
 
-- Passwords must be hashed before being stored.
-- JWT secrets and MongoDB credentials must remain private.
-- Environment files must not be committed to GitHub.
-- Task endpoints must enforce ownership on the backend.
-- Protected routes must reject invalid or missing tokens.
-- Production CORS settings should allow only the intended frontend origins.
-- Screenshots and documentation must not expose private credentials or tokens.
+- Passwords are hashed with bcrypt before storage and never returned by the API.
+- JWT secrets and database credentials are kept in environment variables and excluded from Git.
+- Task endpoints enforce ownership on the backend, so users can only reach their own tasks.
+- Protected routes reject missing, invalid or expired tokens.
+- CORS allows only the configured frontend origin.
+- Helmet sets secure HTTP headers.
 
 ## 15. Future Enhancements
 
-Possible future improvements include:
-
-- Advanced task search and filtering.
-- Overdue task indicators and deadline reminders.
-- Improved mobile responsiveness.
-- Pagination for large task lists.
-- Automated frontend and backend tests.
-- Password reset and email verification.
-- Notifications and recurring tasks.
-- Additional dashboard analytics.
+- Pagination for large task lists
+- Automated frontend and backend tests
+- Password reset and email verification
+- Deadline reminders and notifications
+- Recurring tasks
+- Additional dashboard analytics
 
 ## 16. Project Deliverables
 
-- Complete MERN source code.
-- REST API documentation.
-- MongoDB database schema.
-- Application screenshots or demo.
-- Deployment links.
-- GitHub repository link.
-- Project report.
+- Complete MERN source code
+- REST API documentation ([docs/API.md](docs/API.md))
+- MongoDB database schema ([docs/SCHEMA.md](docs/SCHEMA.md))
+- Screenshots and demo
+- Deployment links
+- GitHub repository link
+
 
 ## 17. Author and Project Links
 
-**Project Name:** Cognevance TaskFlow — MERN Task Manager
+**Project:** Cognevance TaskFlow — MERN Task Manager
 
-**GitHub Profile:** https://github.com/anveez
+**GitHub profile:** https://github.com/anveez
 
 **Repository:** https://github.com/anveez/cognevance_TaskFlow
 
-**Live Application:** ADD_YOUR_LIVE_FRONTEND_URL
+**Live application:** https://anveez-taskflow-deploy-2026.vercel.app
 
-**Backend API:** ADD_YOUR_BACKEND_API_URL
+**Backend API:** **Backend API:** https://cognevance-task-flow.vercel.app/api
 
 ---
+---
 
-Prepared for the Cognevance project submission. Update all placeholders and verify API routes, database fields, and implemented features before submitting.
+Prepared for the Cognevance project submission.
