@@ -7,20 +7,28 @@ const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
 
-// Security middleware
 app.use(helmet());
 
-// Allowed frontend origins
 const allowedOrigins = [
   'http://localhost:5173',
+  'https://anveez-taskflow.vercel.app',
   'https://anveez-taskflow-deploy-2026-5spn32uwg-abc-1542.vercel.app'
 ];
 
-// CORS configuration
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  // Allow preview deployments for this specific Vercel project.
+  return /^https:\/\/anveez-taskflow-deploy-2026-[a-z0-9]+-abc-1542\.vercel\.app$/.test(origin);
+};
+
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests without an Origin header, such as health checks
-    if (!origin || allowedOrigins.includes(origin)) {
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) {
       return callback(null, true);
     }
 
@@ -30,10 +38,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Parse JSON request bodies
 app.use(express.json());
 
-// Root health check
 app.get('/', (_req, res) => {
   res.json({
     status: 'ok',
@@ -41,7 +47,6 @@ app.get('/', (_req, res) => {
   });
 });
 
-// API health check
 app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
@@ -49,11 +54,7 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-// Registration and login routes
 app.use('/api/auth', authRoutes);
-
-// Protected task routes
 app.use('/api/tasks', taskRoutes);
 
-// Export Express app for deployment
 module.exports = app;
