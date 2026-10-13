@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_URL || '/api';
+const BASE = import.meta.env.VITE_API_URL || 'https://cognevance-task-flow.vercel.app/api';
 
 export async function api(path, { method = 'GET', body } = {}) {
   const token = localStorage.getItem('token');
